@@ -3,6 +3,7 @@ import { CLIEngine } from 'eslint';
 
 export default function reslint() {
     var cli = new CLIEngine({
+        fix: true,
         exclude: 'node_modules/**'
     });
     return {
