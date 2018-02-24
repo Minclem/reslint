@@ -12,7 +12,7 @@ export default function reslint() {
             let relt = cli.executeOnText(code, basePath);
 
             if (relt.results) {
-                let errTips = cli.getFormatter('stylish')(relt.results);
+                let errTips = cli.getFormatter('codeframe')(relt.results);
                 console.log(errTips);
             }
         }
