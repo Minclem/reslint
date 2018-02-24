@@ -1,4 +1,5 @@
 import path from 'path';
+import { createFilter } from 'rollup-pluginutils';
 import { CLIEngine } from 'eslint';
 
 export default function reslint() {
@@ -6,16 +7,16 @@ export default function reslint() {
         fix: true,
         exclude: 'node_modules/**'
     });
+    
     return {
         name: 'reslint',
         transform: (code, id) => {
-            let basePath = path.relative(process.cwd(), id).split(path.sep).join('/');
-            let relt = cli.executeOnText(code, basePath);
+            var file = normalizePath(id),
+                relt = cli.executeOnText(code, file),
+                isExclude = !createFilter(options.include, options.exclude || /node_modules/)(id);
 
-            if (relt.results) {
-                let errTips = cli.getFormatter('codeframe')(relt.results);
-                console.log(errTips);
-            }
+            if (cli.isPathIgnored(file) || isExclude) return null;
+            if (relt.results) console.error(cli.getFormatter('codeframe')(relt.results));
         }
     }
 }
